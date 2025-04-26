@@ -9,6 +9,8 @@ import {
 } from '@nestjs/common';
 import { CatalogService } from './catalog.service';
 import { Catalog } from './catalog.entity';
+import { CreateCatalogDto } from './dto/create-catalog.dto';
+import { UpdateCatalogDto } from './dto/update-catalog.dto';
 
 @Controller('catalogs')
 export class CatalogController {
@@ -25,13 +27,16 @@ export class CatalogController {
   }
 
   @Post()
-  create(@Body() body: { name: string }): Catalog {
-    return this.catalogService.create(body);
+  create(@Body() createCatalogDto: CreateCatalogDto): Catalog {
+    return this.catalogService.create(createCatalogDto);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() body: { name?: string }): Catalog {
-    return this.catalogService.update(+id, body);
+  update(
+    @Param('id') id: string,
+    @Body() updateCatalogDto: UpdateCatalogDto,
+  ): Catalog {
+    return this.catalogService.update(+id, updateCatalogDto);
   }
 
   @Delete(':id')
