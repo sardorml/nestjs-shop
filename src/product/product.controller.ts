@@ -13,15 +13,19 @@ import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ApiQuery } from '@nestjs/swagger';
 
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
-  findAll(@Query('catalogId', ParseIntPipe) catalogId?: number): Product[] {
-    if (catalogId) {
-      return this.productService.findAllByCatalog(catalogId);
+  @ApiQuery({ name: 'catalogId', required: false, type: Number })
+  findAll(@Query('catalogId') catalogId?: string): Product[] {
+    const catalogIdNumber = catalogId ? parseInt(catalogId, 10) : undefined;
+
+    if (catalogIdNumber) {
+      return this.productService.findAllByCatalog(catalogIdNumber);
     }
     return this.productService.findAll();
   }
