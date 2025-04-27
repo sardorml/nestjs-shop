@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
@@ -18,16 +19,16 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
-  findAll(@Query('catalogId') catalogId?: string): Product[] {
+  findAll(@Query('catalogId', ParseIntPipe) catalogId?: number): Product[] {
     if (catalogId) {
-      return this.productService.findAllByCatalog(+catalogId);
+      return this.productService.findAllByCatalog(catalogId);
     }
     return this.productService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Product {
-    return this.productService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number): Product {
+    return this.productService.findOne(id);
   }
 
   @Post()
@@ -37,27 +38,27 @@ export class ProductController {
 
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateProductDto: UpdateProductDto,
   ): Product {
-    return this.productService.update(+id, updateProductDto);
+    return this.productService.update(id, updateProductDto);
   }
 
   @Put(':id/assign/:catalogId')
   assignToCatalog(
-    @Param('id') id: string,
-    @Param('catalogId') catalogId: string,
+    @Param('id', ParseIntPipe) id: number,
+    @Param('catalogId', ParseIntPipe) catalogId: number,
   ): Product {
-    return this.productService.assignToCatalog(+id, +catalogId);
+    return this.productService.assignToCatalog(id, catalogId);
   }
 
   @Put(':id/remove-catalog')
-  removeFromCatalog(@Param('id') id: string): Product {
-    return this.productService.removeFromCatalog(+id);
+  removeFromCatalog(@Param('id', ParseIntPipe) id: number): Product {
+    return this.productService.removeFromCatalog(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): void {
-    return this.productService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number): void {
+    return this.productService.remove(id);
   }
 }

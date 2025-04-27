@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Body,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CatalogService } from './catalog.service';
 import { Catalog } from './catalog.entity';
@@ -22,8 +23,8 @@ export class CatalogController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Catalog {
-    return this.catalogService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number): Catalog {
+    return this.catalogService.findOne(id);
   }
 
   @Post()
@@ -33,14 +34,14 @@ export class CatalogController {
 
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateCatalogDto: UpdateCatalogDto,
   ): Catalog {
-    return this.catalogService.update(+id, updateCatalogDto);
+    return this.catalogService.update(id, updateCatalogDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): void {
-    return this.catalogService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number): void {
+    return this.catalogService.remove(id);
   }
 }
